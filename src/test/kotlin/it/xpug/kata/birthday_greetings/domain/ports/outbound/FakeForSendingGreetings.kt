@@ -1,7 +1,6 @@
-package it.xpug.kata.birthday_greetings.adapters.outbound
+package it.xpug.kata.birthday_greetings.domain.ports.outbound
 
 import it.xpug.kata.birthday_greetings.domain.Greeting
-import it.xpug.kata.birthday_greetings.domain.ports.outbound.ForSendingGreetings
 
 class FakeForSendingGreetings : ForSendingGreetings {
     val received = mutableListOf<Greeting>()

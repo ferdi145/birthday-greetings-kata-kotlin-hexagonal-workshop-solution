@@ -1,6 +1,5 @@
 package it.xpug.kata.birthday_greetings.domain
 
-import it.xpug.kata.birthday_greetings.adapters.inbound.InvalidInputDateException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException

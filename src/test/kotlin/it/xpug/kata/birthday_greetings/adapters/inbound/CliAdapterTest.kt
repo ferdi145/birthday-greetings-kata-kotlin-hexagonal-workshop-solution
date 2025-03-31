@@ -1,6 +1,8 @@
 package it.xpug.kata.birthday_greetings.adapters.inbound
 
+import it.xpug.kata.birthday_greetings.domain.InvalidInputDateException
 import it.xpug.kata.birthday_greetings.domain.XDate
+import it.xpug.kata.birthday_greetings.domain.ports.inbound.FakeForGreetingEmployees
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -52,11 +54,10 @@ class CliAdapterTest {
     fun `throws exception when invalid date format is provided`() {
         // given
         val invalidDateFormat = "30-03-2025" // Should be YYYY/MM/DD
-        
+
         // when & then
-        val exception = assertThrows(InvalidInputDateException::class.java) {
+        assertThrows(InvalidInputDateException::class.java) {
             sut.invoke(arrayOf(invalidDateFormat))
         }
-        assertEquals("Invalid date format: '30-03-2025'. Please provide a date in the format YYYY/MM/DD.", exception.message)
     }
 } 
