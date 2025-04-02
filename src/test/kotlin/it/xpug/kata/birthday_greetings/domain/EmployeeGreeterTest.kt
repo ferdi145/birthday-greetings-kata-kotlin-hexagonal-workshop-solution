@@ -34,7 +34,6 @@ class EmployeeGreeterTest {
     fun `sends greetings to multiple employees with birthday on same day`() {
         // given
         val sharedBirthDate = "1980/05/15"
-        
         employeeRepository.save(Employee("John", "Doe", sharedBirthDate, "john.doe@example.com"))
         employeeRepository.save(Employee("Jane", "Smith", sharedBirthDate, "jane.smith@example.com"))
         
@@ -60,8 +59,6 @@ class EmployeeGreeterTest {
     @Test
     fun `does not send greetings when nobody has birthday`() {
         // given
-        val johnBirthday = "1982/10/08"
-        employeeRepository.save(Employee("John", "Doe", johnBirthday, "john.doe@foobar.com"))
         val dateWithNoBirthdays = "1982/11/08"
         
         // when
