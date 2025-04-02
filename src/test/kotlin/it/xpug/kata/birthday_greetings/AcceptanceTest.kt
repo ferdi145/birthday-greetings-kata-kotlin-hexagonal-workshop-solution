@@ -3,7 +3,7 @@ package it.xpug.kata.birthday_greetings
 import com.icegreen.greenmail.util.GreenMail
 import com.icegreen.greenmail.util.GreenMailUtil
 import com.icegreen.greenmail.util.ServerSetup
-import it.xpug.kata.birthday_greetings.adapters.outbound.FileForGettingEmployees
+import it.xpug.kata.birthday_greetings.adapters.outbound.FileEmployeeRepository
 import it.xpug.kata.birthday_greetings.adapters.outbound.SmtpForSendingGreetings
 import it.xpug.kata.birthday_greetings.domain.EmployeeGreeter
 import it.xpug.kata.birthday_greetings.domain.XDate
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 class AcceptanceTest {
     private val NONSTANDARD_PORT = 9999
     private lateinit var mailServer: GreenMail
-    private val employeeRepository = FileForGettingEmployees("employee_data.txt")
+    private val employeeRepository = FileEmployeeRepository("employee_data.txt")
     private val emailService = SmtpForSendingGreetings("localhost", NONSTANDARD_PORT, "sender@here.com")
     private val employeeGreeter = EmployeeGreeter(employeeRepository, emailService)
 

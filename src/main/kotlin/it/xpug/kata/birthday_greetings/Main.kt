@@ -1,7 +1,7 @@
 package it.xpug.kata.birthday_greetings
 
 import it.xpug.kata.birthday_greetings.adapters.inbound.CliAdapter
-import it.xpug.kata.birthday_greetings.adapters.outbound.FileForGettingEmployees
+import it.xpug.kata.birthday_greetings.adapters.outbound.FileEmployeeRepository
 import it.xpug.kata.birthday_greetings.adapters.outbound.SmtpForSendingGreetings
 import it.xpug.kata.birthday_greetings.domain.EmployeeGreeter
 
@@ -14,7 +14,7 @@ object Main {
     }
 
     private fun configure(): CliAdapter {
-        val employeeRepository = FileForGettingEmployees("employee_data.txt")
+        val employeeRepository = FileEmployeeRepository("employee_data.txt")
         val emailService = SmtpForSendingGreetings("localhost", 25, "sender@here.com")
         val employeeGreeter = EmployeeGreeter(employeeRepository, emailService)
 

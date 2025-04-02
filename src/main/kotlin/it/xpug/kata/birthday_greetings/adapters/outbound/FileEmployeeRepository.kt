@@ -5,7 +5,7 @@ import it.xpug.kata.birthday_greetings.domain.XDate
 import it.xpug.kata.birthday_greetings.domain.ports.outbound.ForGettingEmployees
 import java.io.File
 
-class FileForGettingEmployees(private val filePath: String) : ForGettingEmployees {
+class FileEmployeeRepository(private val filePath: String) : ForGettingEmployees {
     private val EXPECTED_HEADER = "last_name, first_name, date_of_birth, email"
     
     override fun findEmployeesForBirthdayAt(xdate: XDate): List<Employee> {
