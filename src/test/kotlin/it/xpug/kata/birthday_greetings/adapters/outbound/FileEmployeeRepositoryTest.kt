@@ -1,6 +1,7 @@
 package it.xpug.kata.birthday_greetings.adapters.outbound
 
 import it.xpug.kata.birthday_greetings.domain.XDate
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -89,7 +90,7 @@ class FileEmployeeRepositoryTest {
     }
 
     @Test
-    fun `should throw exception when required field is missing`() {
+    fun `should throw exception when required field is empty`() {
         // Given
         val tempFile = createTempFile(prefix = "missing_field_", suffix = ".txt").toFile()
         tempFile.writeText(
@@ -108,7 +109,27 @@ class FileEmployeeRepositoryTest {
     }
 
     @Test
-    fun `should handle whitespace in fields correctly`() {
+    fun `should throw exception when csv line has unequal parts than header`() {
+        // Given
+        val tempFile = createTempFile(prefix = "missing_field_", suffix = ".txt").toFile()
+        tempFile.writeText(
+            """
+            last_name, first_name, date_of_birth, email
+            Doe, John, john.doe@foobar.com
+        """.trimIndent()
+        )
+
+        val repository = FileEmployeeRepository(tempFile.absolutePath)
+
+        // When & Then: should throw IllegalArgumentException
+        assertThrows<IllegalArgumentException> {
+            repository.findEmployees()
+        }
+            .let { assertThat(it.message).contains("Invalid line format: Expected 4 fields but found 3") }
+    }
+    
+    @Test
+    fun `should trim whitespaces in fields`() {
         // Given
         val tempFile = createTempFile(prefix = "whitespace_", suffix = ".txt").toFile()
         tempFile.writeText(
@@ -202,5 +223,22 @@ class FileEmployeeRepositoryTest {
         assertThrows<IllegalArgumentException> {
             repository.findEmployees()
         }
+    }
+
+    @Test
+    fun `should throw exception when file is completely empty`() {
+        // Given
+        val tempFile = createTempFile(prefix = "completely_empty_", suffix = ".txt").toFile()
+        tempFile.writeText("")  // Completely empty file without any lines
+
+        val repository = FileEmployeeRepository(tempFile.absolutePath)
+
+        // When & Then: should throw IllegalArgumentException
+        val exception = assertThrows<IllegalArgumentException> {
+            repository.findEmployees()
+        }
+        
+        // Verify the exception message is appropriate for an empty file
+        assertEquals("File is empty", exception.message)
     }
 } 
