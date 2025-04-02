@@ -8,24 +8,25 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.io.path.createTempFile
 
-class FileEmployeeRepositoryTest {
+class FileForGettingEmployeesTest {
 
     @Test
     fun `should read employees from file correctly`() {
         // Given
         val tempFile = createTempFile(prefix = "employees_", suffix = ".txt").toFile()
+        val birthday = "1982/10/08"
         tempFile.writeText(
             """
             last_name, first_name, date_of_birth, email
-            Doe, John, 1982/10/08, john.doe@foobar.com
-            Ann, Mary, 1975/03/11, mary.ann@foobar.com
+            Doe, John, $birthday, john.doe@foobar.com
+            Ann, Mary, $birthday, mary.ann@foobar.com
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployees()
+        val employees = repository.findEmployeesForBirthdayAt(XDate(birthday))
 
         // Then
         assertEquals(2, employees.size)
@@ -33,13 +34,11 @@ class FileEmployeeRepositoryTest {
         val john = employees[0]
         assertEquals("John", john.firstName)
         assertEquals("Doe", john.lastName)
-        assertTrue(john.isBirthday(XDate("1982/10/08")))
         assertEquals("john.doe@foobar.com", john.email)
 
         val mary = employees[1]
         assertEquals("Mary", mary.firstName)
         assertEquals("Ann", mary.lastName)
-        assertTrue(mary.isBirthday(XDate("1975/03/11")))
         assertEquals("mary.ann@foobar.com", mary.email)
     }
 
@@ -49,10 +48,10 @@ class FileEmployeeRepositoryTest {
         val tempFile = createTempFile(prefix = "empty_employees_", suffix = ".txt").toFile()
         tempFile.writeText("last_name, first_name, date_of_birth, email")
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployees()
+        val employees = repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
 
         // Then
         assertTrue(employees.isEmpty())
@@ -62,11 +61,11 @@ class FileEmployeeRepositoryTest {
     fun `should throw exception when file does not exist`() {
         // Given
         val nonExistentFile = "non_existent_file.txt"
-        val repository = FileEmployeeRepository(nonExistentFile)
+        val repository = FileForGettingEmployees(nonExistentFile)
 
         // When & Then: should throw IllegalArgumentException
         assertThrows<IllegalArgumentException> {
-            repository.findEmployees()
+            repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
         }
     }
 
@@ -81,11 +80,11 @@ class FileEmployeeRepositoryTest {
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When & Then: should throw IllegalArgumentException
         assertThrows<IllegalArgumentException> {
-            repository.findEmployees()
+            repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
         }
     }
 
@@ -100,11 +99,11 @@ class FileEmployeeRepositoryTest {
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When & Then: should throw IllegalArgumentException
         assertThrows<IllegalArgumentException> {
-            repository.findEmployees()
+            repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
         }
     }
 
@@ -119,37 +118,37 @@ class FileEmployeeRepositoryTest {
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When & Then: should throw IllegalArgumentException
         assertThrows<IllegalArgumentException> {
-            repository.findEmployees()
+            repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
         }
             .let { assertThat(it.message).contains("Invalid line format: Expected 4 fields but found 3") }
     }
-    
+
     @Test
     fun `should trim whitespaces in fields`() {
         // Given
         val tempFile = createTempFile(prefix = "whitespace_", suffix = ".txt").toFile()
+        val birthday = "1982/10/08"
         tempFile.writeText(
             """
             last_name, first_name, date_of_birth, email
-            Doe,    John   ,   1982/10/08   ,   john.doe@foobar.com   
+            Doe,    John   ,   $birthday   ,   john.doe@foobar.com   
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployees()
+        val employees = repository.findEmployeesForBirthdayAt(XDate(birthday))
 
         // Then
         assertEquals(1, employees.size)
         val employee = employees[0]
         assertEquals("John", employee.firstName)
         assertEquals("Doe", employee.lastName)
-        assertTrue(employee.isBirthday(XDate("1982/10/08")))
         assertEquals("john.doe@foobar.com", employee.email)
     }
 
@@ -157,21 +156,22 @@ class FileEmployeeRepositoryTest {
     fun `should skip empty lines`() {
         // Given
         val tempFile = createTempFile(prefix = "empty_lines_", suffix = ".txt").toFile()
+        val birthday = "1982/10/08"
         tempFile.writeText(
             """
             last_name, first_name, date_of_birth, email
             
-            Doe, John, 1982/10/08, john.doe@foobar.com
+            Doe, John, $birthday, john.doe@foobar.com
             
-            Ann, Mary, 1975/03/11, mary.ann@foobar.com
+            Ann, Mary, $birthday, mary.ann@foobar.com
             
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployees()
+        val employees = repository.findEmployeesForBirthdayAt(XDate(birthday))
 
         // Then
         assertEquals(2, employees.size)
@@ -181,19 +181,19 @@ class FileEmployeeRepositoryTest {
     fun `should ignore duplicate employee entries`() {
         // Given
         val tempFile = createTempFile(prefix = "duplicates_", suffix = ".txt").toFile()
+        val birthday = "1982/10/08"
         tempFile.writeText(
             """
             last_name, first_name, date_of_birth, email
-            Doe, John, 1982/10/08, john.doe@foobar.com
-            Doe, John, 1982/10/08, john.doe@foobar.com
-            Doe, John, 1982/10/08, john.doe@foobar.com
+            Doe, John, $birthday, john.doe@foobar.com
+            Doe, John, $birthday, john.doe@foobar.com
         """.trimIndent()
         )
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployees()
+        val employees = repository.findEmployeesForBirthdayAt(XDate(birthday))
 
         // Then
         assertEquals(1, employees.size, "Should only contain one employee")
@@ -201,7 +201,7 @@ class FileEmployeeRepositoryTest {
         val employee = employees[0]
         assertEquals("John", employee.firstName)
         assertEquals("Doe", employee.lastName)
-        assertTrue(employee.isBirthday(XDate("1982/10/08")))
+        assertTrue(employee.isBirthday(XDate(birthday)))
         assertEquals("john.doe@foobar.com", employee.email)
     }
 
@@ -217,11 +217,11 @@ class FileEmployeeRepositoryTest {
         )
         tempFile.setReadable(false)
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When/Then
         assertThrows<IllegalArgumentException> {
-            repository.findEmployees()
+            repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
         }
     }
 
@@ -231,13 +231,13 @@ class FileEmployeeRepositoryTest {
         val tempFile = createTempFile(prefix = "completely_empty_", suffix = ".txt").toFile()
         tempFile.writeText("")  // Completely empty file without any lines
 
-        val repository = FileEmployeeRepository(tempFile.absolutePath)
+        val repository = FileForGettingEmployees(tempFile.absolutePath)
 
         // When & Then: should throw IllegalArgumentException
         val exception = assertThrows<IllegalArgumentException> {
-            repository.findEmployees()
+            repository.findEmployeesForBirthdayAt(XDate("2025/01/01"))
         }
-        
+
         // Verify the exception message is appropriate for an empty file
         assertEquals("File is empty", exception.message)
     }

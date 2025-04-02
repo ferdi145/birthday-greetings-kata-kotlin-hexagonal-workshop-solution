@@ -1,13 +1,13 @@
 package it.xpug.kata.birthday_greetings.domain
 
 import it.xpug.kata.birthday_greetings.adapters.outbound.FakeForSendingGreetings
-import it.xpug.kata.birthday_greetings.adapters.outbound.InMemoryEmployeeRepository
+import it.xpug.kata.birthday_greetings.adapters.outbound.InMemoryForGettingEmployees
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class EmployeeGreeterTest {
 
-    private val employeeRepository = InMemoryEmployeeRepository()
+    private val employeeRepository = InMemoryForGettingEmployees()
     private val emailService = FakeForSendingGreetings()
     private val sut = EmployeeGreeter(employeeRepository, emailService)
 

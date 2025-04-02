@@ -1,16 +1,19 @@
 package it.xpug.kata.birthday_greetings.adapters.outbound
 
 import it.xpug.kata.birthday_greetings.domain.Employee
-import it.xpug.kata.birthday_greetings.domain.ports.outbound.EmployeeRepository
+import it.xpug.kata.birthday_greetings.domain.XDate
+import it.xpug.kata.birthday_greetings.domain.ports.outbound.ForGettingEmployees
 import java.io.File
 
-class FileEmployeeRepository(private val filePath: String) : EmployeeRepository {
-
-    companion object {
-        private const val EXPECTED_HEADER = "last_name, first_name, date_of_birth, email"
+class FileForGettingEmployees(private val filePath: String) : ForGettingEmployees {
+    private val EXPECTED_HEADER = "last_name, first_name, date_of_birth, email"
+    
+    override fun findEmployeesForBirthdayAt(xdate: XDate): List<Employee> {
+        return findAllEmployees()
+            .filter { it.isBirthday(xdate) }
     }
-
-    override fun findEmployees(): List<Employee> {
+    
+    private fun findAllEmployees(): List<Employee> {
         val file = File(filePath)
         if (!file.exists()) {
             throw IllegalArgumentException("File ${file.path} does not exist")
