@@ -1,7 +1,7 @@
 package it.xpug.kata.birthday_greetings.domain
 
-import it.xpug.kata.birthday_greetings.adapters.outbound.FakeForSendingGreetings
-import it.xpug.kata.birthday_greetings.adapters.outbound.InMemoryEmployeeRepository
+import it.xpug.kata.birthday_greetings.domain.ports.outbound.FakeForSendingGreetings
+import it.xpug.kata.birthday_greetings.domain.ports.outbound.InMemoryEmployeeRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
