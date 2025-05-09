@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 class EmployeeTest {
     @Test
-    fun testBirthday() {
+    fun `should correctly identify employee birthday`() {
         val employee = Employee("foo", "bar", "1990/01/31", "a@b.c")
 
         assertThat(employee.isBirthday(XDate("2008/01/30")))
