@@ -25,7 +25,7 @@ class FileEmployeeRepositoryTest {
         val repository = FileEmployeeRepository(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployeesForBirthdayAt(XDate("1982/10/08"))
+        val employees = repository.findEmployeesForBirthdayAt(XDate.of(1982, 10, 8))
 
         // Then
         assertEquals(2, employees.size)
@@ -57,14 +57,14 @@ class FileEmployeeRepositoryTest {
         val repository = FileEmployeeRepository(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployeesForBirthdayAt(XDate("1982/10/08"))
+        val employees = repository.findEmployeesForBirthdayAt(XDate.of(1982, 10, 8))
 
         // Then
         assertEquals(1, employees.size)
         val john = employees[0]
         assertEquals("john.doe@foobar.com", john.email)
     }
-    
+
     @Test
     fun `should handle empty file correctly`() {
         // Given
@@ -164,7 +164,7 @@ class FileEmployeeRepositoryTest {
         val repository = FileEmployeeRepository(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployeesForBirthdayAt(XDate("1982/10/08"))
+        val employees = repository.findEmployeesForBirthdayAt(XDate.of(1982, 10, 8))
 
         // Then
         assertEquals(1, employees.size)
@@ -192,7 +192,7 @@ class FileEmployeeRepositoryTest {
         val repository = FileEmployeeRepository(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployeesForBirthdayAt(XDate("1982/10/08"))
+        val employees = repository.findEmployeesForBirthdayAt(XDate.of(1982, 10, 8))
 
         // Then
         assertEquals(2, employees.size)
@@ -213,7 +213,7 @@ class FileEmployeeRepositoryTest {
         val repository = FileEmployeeRepository(tempFile.absolutePath)
 
         // When
-        val employees = repository.findEmployeesForBirthdayAt(XDate("1982/10/08"))
+        val employees = repository.findEmployeesForBirthdayAt(XDate.of(1982, 10, 8))
 
         // Then
         assertEquals(1, employees.size, "Should only contain one employee")
@@ -221,7 +221,7 @@ class FileEmployeeRepositoryTest {
         val employee = employees[0]
         assertEquals("John", employee.firstName)
         assertEquals("Doe", employee.lastName)
-        assertTrue(employee.isBirthday(XDate("1982/10/08")))
+        assertTrue(employee.isBirthday(XDate.of(1982, 10, 8)))
         assertEquals("john.doe@foobar.com", employee.email)
     }
 
@@ -262,5 +262,5 @@ class FileEmployeeRepositoryTest {
         assertEquals("File is empty", exception.message)
     }
 
-    private fun xDate(): XDate = XDate("2025/01/01")
+    private fun xDate(): XDate = XDate.of(2025, 1, 1)
 } 

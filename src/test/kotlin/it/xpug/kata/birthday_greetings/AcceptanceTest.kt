@@ -32,7 +32,7 @@ class AcceptanceTest {
 
     @Test
     fun willSendGreetings_whenItsSomebodysBirthday() {
-        employeeGreeter.greetEmployees(XDate("2008/10/08"))
+        employeeGreeter.greetEmployees(XDate.of(2008, 10, 8))
 
         assertThat(mailServer.receivedMessages.size)
             .`as`("message not sent?")

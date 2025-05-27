@@ -21,7 +21,7 @@ class CliAdapterTest {
 
         // then
         assertThat(fakeGreeter.receivedDates).hasSize(1)
-        assertThat(fakeGreeter.receivedDates.first()).isEqualTo(XDate(dateString))
+        assertThat(fakeGreeter.receivedDates.first()).isEqualTo(XDate.of(2025, 3, 30))
     }
 
     @Test
@@ -34,7 +34,7 @@ class CliAdapterTest {
 
         // then
         assertThat(fakeGreeter.receivedDates).hasSize(1)
-        assertThat(fakeGreeter.receivedDates.first()).isEqualTo(XDate(dateString))
+        assertThat(fakeGreeter.receivedDates.first()).isEqualTo(XDate.of(2025, 3, 30))
     }
 
     @Test

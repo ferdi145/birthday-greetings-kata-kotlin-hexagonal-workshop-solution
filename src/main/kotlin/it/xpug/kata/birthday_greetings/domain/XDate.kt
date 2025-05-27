@@ -1,18 +1,8 @@
 package it.xpug.kata.birthday_greetings.domain
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 data class XDate(private val date: LocalDate) {
-
-    constructor(yyyyMMdd: String) : this(
-        try {
-            LocalDate.parse(yyyyMMdd, FORMATTER)
-        } catch (e: DateTimeParseException) {
-            throw InvalidInputDateException(yyyyMMdd)
-        }
-    )
 
     val day: Int
         get() = date.dayOfMonth
@@ -25,7 +15,6 @@ data class XDate(private val date: LocalDate) {
     }
 
     companion object {
-        private val FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
         fun of(year: Int, month: Int, day: Int): XDate = XDate(LocalDate.of(year, month, day))
     }
 

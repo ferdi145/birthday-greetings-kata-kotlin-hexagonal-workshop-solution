@@ -58,10 +58,10 @@ class EmployeeGreeterTest {
     @Test
     fun `does not send greetings when nobody has birthday`() {
         // given
-        val dateWithNoBirthdays = "1982/11/08"
+        val dateWithNoBirthdays = XDate.of(1982, 11, 8)
 
         // when
-        sut.greetEmployees(XDate(dateWithNoBirthdays))
+        sut.greetEmployees(dateWithNoBirthdays)
 
         // then
         assertThat(emailService.received).isEmpty()
