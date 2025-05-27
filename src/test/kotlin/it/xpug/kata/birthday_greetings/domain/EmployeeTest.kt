@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test
 class EmployeeTest {
     @Test
     fun `should correctly identify employee birthday`() {
-        val employee = Employee("foo", "bar", "1990/01/31", "a@b.c")
+        val employeeBirthdate = XDate.of(1990, 1, 31)
+        val employee = Employee("foo", "bar", employeeBirthdate, "a@b.c")
 
-        assertThat(employee.isBirthday(XDate("2008/01/30")))
+        assertThat(employee.isBirthday(XDate.of(1990, 2, 3)))
             .`as`("not his birthday")
             .isFalse()
-        assertThat(employee.isBirthday(XDate("2008/01/31")))
+        assertThat(employee.isBirthday(XDate.of(1990, 1, 31)))
             .`as`("his birthday")
             .isTrue()
     }

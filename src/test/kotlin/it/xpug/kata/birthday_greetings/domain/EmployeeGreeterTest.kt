@@ -13,11 +13,10 @@ class EmployeeGreeterTest {
 
     @Test
     fun `sends greetings when it's somebody's birthday`() {
-        val birthDate = "1982/10/08"
-        
+        val birthDate = XDate.of(1982, 10, 8)
         employeeRepository.save(Employee("John", "Doe", birthDate, "john.doe@foobar.com"))
 
-        sut.greetEmployees(XDate(birthDate))
+        sut.greetEmployees(birthDate)
 
         assertThat(emailService.received.first())
             .isEqualTo(
@@ -29,17 +28,17 @@ class EmployeeGreeterTest {
             )
 
     }
-    
+
     @Test
     fun `sends greetings to multiple employees with birthday on same day`() {
         // given
-        val sharedBirthDate = "1980/05/15"
+        val sharedBirthDate = XDate.of(1982, 10, 8)
         employeeRepository.save(Employee("John", "Doe", sharedBirthDate, "john.doe@example.com"))
         employeeRepository.save(Employee("Jane", "Smith", sharedBirthDate, "jane.smith@example.com"))
-        
+
         // when
-        sut.greetEmployees(XDate(sharedBirthDate))
-        
+        sut.greetEmployees(sharedBirthDate)
+
         // then
         assertThat(emailService.received).hasSize(2)
         assertThat(emailService.received).containsExactlyInAnyOrder(
@@ -55,15 +54,15 @@ class EmployeeGreeterTest {
             )
         )
     }
-    
+
     @Test
     fun `does not send greetings when nobody has birthday`() {
         // given
         val dateWithNoBirthdays = "1982/11/08"
-        
+
         // when
         sut.greetEmployees(XDate(dateWithNoBirthdays))
-        
+
         // then
         assertThat(emailService.received).isEmpty()
     }

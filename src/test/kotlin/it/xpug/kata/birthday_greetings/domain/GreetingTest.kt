@@ -7,7 +7,8 @@ class GreetingTest {
 
     @Test
     fun `create greeting for employee`() {
-        val employee = Employee("foo", "bar", "1990/01/31", "a@b.c")
+        val birthDate = XDate.of(1990, 1, 31)
+        val employee = Employee("foo", "bar", birthDate, "a@b.c")
 
         val greeting = Greeting.of(employee)
 

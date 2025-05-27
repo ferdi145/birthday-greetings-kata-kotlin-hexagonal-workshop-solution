@@ -26,6 +26,7 @@ data class XDate(private val date: LocalDate) {
 
     companion object {
         private val FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+        fun of(year: Int, month: Int, day: Int): XDate = XDate(LocalDate.of(year, month, day))
     }
 
     override fun toString(): String {
