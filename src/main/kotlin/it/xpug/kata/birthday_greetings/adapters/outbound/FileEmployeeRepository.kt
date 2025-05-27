@@ -4,15 +4,17 @@ import it.xpug.kata.birthday_greetings.domain.Employee
 import it.xpug.kata.birthday_greetings.domain.XDate
 import it.xpug.kata.birthday_greetings.domain.ports.outbound.ForGettingEmployees
 import java.io.File
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class FileEmployeeRepository(private val filePath: String) : ForGettingEmployees {
     private val EXPECTED_HEADER = "last_name, first_name, date_of_birth, email"
-    
+
     override fun findEmployeesForBirthdayAt(xdate: XDate): List<Employee> {
         return findAllEmployees()
             .filter { it.isBirthday(xdate) }
     }
-    
+
     private fun findAllEmployees(): List<Employee> {
         val file = File(filePath)
         if (!file.exists()) {
@@ -66,7 +68,7 @@ class FileEmployeeRepository(private val filePath: String) : ForGettingEmployees
         return Employee(
             firstName = firstName,
             lastName = lastName,
-            birthDate = birthDate,
+            xdate = XDate(LocalDate.parse(birthDate, FORMATTER)),
             email = email
         )
     }
@@ -75,5 +77,9 @@ class FileEmployeeRepository(private val filePath: String) : ForGettingEmployees
         return employees.distinctBy {
             it.email
         }
+    }
+
+    companion object {
+        private val FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     }
 } 
