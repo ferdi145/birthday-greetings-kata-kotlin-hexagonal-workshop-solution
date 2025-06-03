@@ -37,7 +37,6 @@ class SmtpForSendingGreetings(
         msg.setHeader("Content-Type", "text/plain; charset=UTF-8")
 
         // Simulate slow dependency
-        Thread.sleep(2000L)
         Transport.send(msg)
     }
 } 
